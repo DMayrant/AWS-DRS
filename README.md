@@ -1,5 +1,5 @@
 # Disaster Recovery Service DRS ☁️
-This project focuses on replicating a nginx server from us-east-1 (Virginia) --> ap-southeast-7 (Thailand) using a Pilot Light DR plan using AWS Elastic Disaster Recovery
+This project focuses on replicating a nginx server from us-east-1 (Virginia) --> ap-southeast-1 (Singapore) using a Pilot Light DR plan using AWS Elastic Disaster Recovery
 
 Disaster Recovery (DR) as four plans
 
@@ -28,10 +28,10 @@ terraform apply
 before install agent on source service
 ```bash
 aws drs initialize-service \
---region ap-southeast-7
+--region ap-southeast-1
 
 aws drs describe-replication-configuration-templates \
---region ap-southeast-7
+--region ap-southeast-1
   ```
 
 # Nginx Server Install 🖥️
@@ -45,6 +45,17 @@ systemctl status nginx
 curl http://localhost
 curl -I https://aws.amazon.com
 ```
+
+# Verify Kernel prerequisites
+```bash
+uname -r
+rpm -qa | grep kernel
+df -h /
+df -h /tmp
+which gcc
+which make
+```
+
 
 # DRS Agent Install 💿
 ```bash
@@ -62,5 +73,5 @@ sudo ./aws-replication-installer-init
 ```
 # Initialize the DRS agent 🕵🏾‍♂️
 ```bash 
-./aws-replication-installer-init --region ap-southeast-7
+./aws-replication-installer-init --region ap-southeast-1
 ```
