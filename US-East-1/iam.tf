@@ -1,4 +1,6 @@
-### DRS Replication Server Role
+########################################
+# DRS Replication Server Role
+########################################
 
 resource "aws_iam_role" "drs_replication_server" {
   name = "AWSElasticDisasterRecoveryReplicationServerRole"
@@ -25,8 +27,9 @@ resource "aws_iam_role_policy_attachment" "drs_replication_server" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticDisasterRecoveryReplicationServerPolicy"
 }
 
-
-### DRS Agent Role
+########################################
+# DRS Agent Role
+########################################
 
 resource "aws_iam_role" "drs_agent" {
   name = "AWSElasticDisasterRecoveryAgentRole"
@@ -35,15 +38,30 @@ resource "aws_iam_role" "drs_agent" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
 
-    Statement = [{
-      Effect = "Allow"
+    Statement = [
+      {
+        Effect = "Allow"
 
-      Principal = {
-        Service = "drs.amazonaws.com"
+        Principal = {
+          Service = "drs.amazonaws.com"
+        }
+
+        Action = [
+          "sts:AssumeRole",
+          "sts:SetSourceIdentity"
+        ]
+
+        Condition = {
+          StringLike = {
+            "sts:SourceIdentity" = "s-*"
+          }
+
+          StringEquals = {
+            "aws:SourceAccount" = "739786453678"
+          }
+        }
       }
-
-      Action = "sts:AssumeRole"
-    }]
+    ]
   })
 }
 
@@ -53,8 +71,9 @@ resource "aws_iam_role_policy_attachment" "drs_agent" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticDisasterRecoveryAgentPolicy"
 }
 
-
-### DRS Failback Role
+########################################
+# DRS Failback Role
+########################################
 
 resource "aws_iam_role" "drs_failback" {
   name = "AWSElasticDisasterRecoveryFailbackRole"
@@ -82,7 +101,9 @@ resource "aws_iam_role_policy_attachment" "drs_failback" {
 }
 
 
-### DRS Conversion Server Role
+########################################
+# DRS Conversion Server Role
+########################################
 
 resource "aws_iam_role" "drs_conversion_server" {
   name = "AWSElasticDisasterRecoveryConversionServerRole"
@@ -110,7 +131,9 @@ resource "aws_iam_role_policy_attachment" "drs_conversion_server" {
 }
 
 
-### DRS Recovery Instance Role
+########################################
+# DRS Recovery Instance Role
+########################################
 
 resource "aws_iam_role" "drs_recovery_instance" {
   name = "AWSElasticDisasterRecoveryRecoveryInstanceRole"
@@ -138,7 +161,10 @@ resource "aws_iam_role_policy_attachment" "drs_recovery_instance" {
 }
 
 
-### DRS Recovery Instance With Launch Actions Role
+########################################
+# DRS Recovery Instance With
+# Launch Actions Role
+########################################
 
 resource "aws_iam_role" "drs_recovery_launch_actions" {
   name = "AWSElasticDisasterRecoveryRecoveryInstanceWithLaunchActionsRole"
@@ -172,7 +198,9 @@ resource "aws_iam_role_policy_attachment" "drs_recovery_launch_actions_ssm" {
 }
 
 
-### SSM EC2 IAM Role
+########################################
+# Source EC2 IAM Role
+########################################
 
 resource "aws_iam_role" "ssm" {
   name = "drs-nginx-ssm-role"
@@ -193,7 +221,9 @@ resource "aws_iam_role" "ssm" {
 }
 
 
-### SSM Policy Attachment
+########################################
+# SSM Policy Attachment
+########################################
 
 resource "aws_iam_role_policy_attachment" "ssm" {
   role = aws_iam_role.ssm.name
@@ -201,16 +231,18 @@ resource "aws_iam_role_policy_attachment" "ssm" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-
-### EC2 Instance Profile
+########################################
+# EC2 Instance Profile
+########################################
 
 resource "aws_iam_instance_profile" "ssm" {
   name = "drs-nginx-ssm-profile"
   role = aws_iam_role.ssm.name
 }
 
-
-### DRS Agent Installation Policy
+########################################
+# DRS Agent Installation Policy
+########################################
 
 resource "aws_iam_user_policy_attachment" "drs_agent_installation" {
   user = "dmay-admin"
@@ -218,9 +250,10 @@ resource "aws_iam_user_policy_attachment" "drs_agent_installation" {
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticDisasterRecoveryAgentInstallationPolicy"
 }
 
-### DRS Agent IAM Policy Simulation
 
-### DRS Agent IAM Policy Simulation
+########################################
+# DRS Agent IAM Policy Simulation
+########################################
 
 data "aws_iam_principal_policy_simulation" "drs_agent_permissions" {
   policy_source_arn = "arn:aws:iam::739786453678:user/dmay-admin"
