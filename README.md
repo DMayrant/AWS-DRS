@@ -75,3 +75,5 @@ sudo ./aws-replication-installer-init
 ```bash 
 ./aws-replication-installer-init --region ap-southeast-1
 ```
+
+![image alt](https://github.com/DMayrant/AWS-DRS/blob/main/Elastic%20Disaster%20Recovery.jpeg?raw=true)
