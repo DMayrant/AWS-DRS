@@ -71,9 +71,6 @@ chmod +x aws-replication-installer-init
 
 sudo ./aws-replication-installer-init
 ```
-# Initialize the DRS agent 🕵🏾‍♂️
-```bash 
-./aws-replication-installer-init --region ap-southeast-1
-```
+![image alt](https://github.com/DMayrant/AWS-DRS/blob/main/Screenshot%202569-08-14%20at%2015.24.18.png?raw=true)
 
 ![image alt](https://github.com/DMayrant/AWS-DRS/blob/main/Elastic%20Disaster%20Recovery.jpeg?raw=true)
