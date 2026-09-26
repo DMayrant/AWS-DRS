@@ -1,5 +1,5 @@
 # Disaster Recovery Service DRS ☁️
-This architecture focuses on replicating a nginx server from us-east-1 (Virginia) --> ap-southeast-1 (Singapore) using a Pilot Light DR plan using AWS Elastic Disaster Recovery
+This architecture focuses on replicating a nginx server from us-east-1 (Virginia) --> ap-southeast-1 (Singapore) using a Pilot Light DR plan using AWS Elastic Disaster Recovery.
 
 Disaster Recovery (DR) as four plans
 
