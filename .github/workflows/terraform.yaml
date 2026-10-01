@@ -42,7 +42,7 @@ jobs:
         run: terraform validate 
 
 # Policy As Code Security Gate
-      - name: Checkov Security Scan
+      - name: Checkov GitHub Action
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: ./${{ matrix.directory }}
