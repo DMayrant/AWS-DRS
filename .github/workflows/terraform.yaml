@@ -1,48 +1,62 @@
-name: terraform CI/CD
+name: Terraform CI/CD
 
 on:
   pull_request:
     branches:
-    - main
+      - main
 
   push:
     branches:
-    - main
+      - main
 
 permissions:
   contents: read
-  
+
 jobs:
   terraform:
     name: Terraform - ${{ matrix.region }}
     runs-on: ubuntu-latest
 
-    steps: 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - directory: US-East-1
+            region: us-east-1
+
+          - directory: AP-Southeast-1
+            region: ap-southeast-1
+
+    defaults:
+      run:
+        working-directory: ./${{ matrix.directory }}
+
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-# AWS Credentials
+      # AWS credentials from GitHub Actions secrets
       - name: Setup AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ matrix.region }}
 
-      - name: Setup terraform
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
 
-      - name: Terraform Format
+      - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
-        run: terraform validate 
+        run: terraform validate -no-color
 
-# Policy As Code Security Gate
-      - name: Checkov GitHub Action
+      # Policy as code security gate
+      - name: Checkov Security Scan
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: ./${{ matrix.directory }}
@@ -50,7 +64,4 @@ jobs:
           soft_fail: false
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-
-       
+        run: terraform plan -input=false -no-color -out=tfplan
